@@ -1,8 +1,10 @@
 name: Claude Code Warmup
+
 on:
   schedule:
     - cron: ${{ vars.WARMUP_CRON || '15 9 * * 1-5' }}
   workflow_dispatch: {}
+
 jobs:
   warmup:
     runs-on: ubuntu-latest
@@ -10,6 +12,7 @@ jobs:
     steps:
       - name: Install Claude Code
         run: npm install -g @anthropic-ai/claude-code
+
       - name: Ping Claude to anchor 5-hour window
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_OAUTH_TOKEN }}
@@ -18,3 +21,4 @@ jobs:
           echo '{"hasCompletedOnboarding":true}' > ~/.claude.json
           claude -p "hi" --model haiku --no-session-persistence 2>&1 || true
           echo "✓ Warmup complete"
+
